@@ -56,7 +56,8 @@ pipeline {
 					}
 					//download and extract package from tenant
 					println("Downloading package");
-					def tempfile = UUID.randomUUID().toString() + ".zip";
+					//def tempfile = UUID.randomUUID().toString() + ".zip";
+					def tempfile = IntegrationPkg + ".zip";
 					println("here is the random value:" + tempfile);
 					def cpiDownloadResponse = httpRequest httpProxy: 'http://rb-proxy-sl.rbesz01.com:8080',acceptType: 'APPLICATION_ZIP', 
 						customHeaders: [[maskValue: false, name: 'Authorization', value: token]], 

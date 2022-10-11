@@ -51,9 +51,9 @@ pipeline {
 						error("Requesting the oauth token for Cloud Integration failed:\n${e}")
 					}
 					//delete the old package content so that only the latest content gets stored
-					//dir(env.GITFolder + '/' + env.IntegrationPkg){
-					//	deleteDir();
-					//}
+					dir(env.GITFolder + '/' + env.IntegrationPkg){
+						deleteDir();
+					}
 					//download and extract package from tenant
 					println("Downloading package");
 					def tempfile = UUID.randomUUID().toString() + ".zip";
@@ -77,7 +77,9 @@ pipeline {
 					def filename=disposition.substring(index + 1, lastindex + 4);
 					def folder=env.GITFolder + '/' + filename.substring(0, filename.indexOf('.zip'));
 					println("Before fileOperation")
-					fileOperations([fileUnZipOperation(filePath: tempfile, targetLocation: folder)])
+					env.IntegrationPkg = $tempfile;
+					fileOperations([fileZipOperation(filePath: env.IntegrationPkg, targetLocation: folder)])
+					//fileOperations([fileUnZipOperation(filePath: tempfile, targetLocation: folder)])
 					cpiDownloadResponse.close();
 					println("After fileOperation")
 					//remove the zip

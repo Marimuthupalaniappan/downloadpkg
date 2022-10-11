@@ -65,7 +65,7 @@ pipeline {
 						timeout: 30,  
 						outputFile: tempfile,
 						//url: 'https://' + env.CPIHost + '/api/v1/IntegrationPackages('{env.IntegrationPkg}')/$value';
-						url: 'https://' + env.CPIHost + '/api/v1/IntegrationPackages('muthuPOC')/$value';
+						url: 'https://rb-cpi-central-d.it-cpi018.cfapps.eu10-003.hana.ondemand.com/api/v1/IntegrationPackages('muthuPOC')/$value';
 					if (cpiDownloadResponse.status == 404){
 						//invalid Package ID
 						error("Received http status code 404. Please check if the Package ID that you have provided exists on the tenant.");

@@ -77,7 +77,7 @@ pipeline {
 					def filename=disposition.substring(index + 1, lastindex + 4);
 					def folder=env.GITFolder + '/' + filename.substring(0, filename.indexOf('.zip'));
 					//println("Before fileOperation")
-					//fileOperations([fileUnZipOperation(filePath: tempfile, targetLocation: folder)])
+					fileOperations([fileUnZipOperation(filePath: tempfile, targetLocation: folder)])
 					cpiDownloadResponse.close();
 					//println("After fileOperation")
 					//remove the zip

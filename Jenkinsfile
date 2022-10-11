@@ -56,7 +56,7 @@ pipeline {
 					}
 					//download and extract package from tenant
 					println("Downloading package");
-					def IntegrationPkg = UUID.randomUUID().toString() + ".zip";
+					def tempfile = UUID.randomUUID().toString() + ".zip";
 					def cpiDownloadResponse = httpRequest httpProxy: 'http://rb-proxy-sl.rbesz01.com:8080',acceptType: 'APPLICATION_ZIP', 
 						customHeaders: [[maskValue: false, name: 'Authorization', value: token]], 
 						ignoreSslErrors: false, 
@@ -65,8 +65,6 @@ pipeline {
 						timeout: 30,  
 						outputFile: tempfile,
 						url: 'https://' + env.CPIHost + '/api/v1/IntegrationPackages(\''+ env.IntegrationPkg + '\')/$value';
-						//url: 'https://' + env.CPIHost + '/api/v1/IntegrationPackages('{env.IntegrationPkg}')/$value';
-						//url: 'https://rb-cpi-central-d.it-cpi018.cfapps.eu10-003.hana.ondemand.com/api/v1/IntegrationPackages("muthuPOC")/$value';
 					if (cpiDownloadResponse.status == 404){
 						//invalid Package ID
 						error("Received http status code 404. Please check if the Package ID that you have provided exists on the tenant.");
@@ -76,18 +74,17 @@ pipeline {
 					def lastindex=disposition.indexOf('.zip', index);
 					def filename=disposition.substring(index + 1, lastindex + 4);
 					def folder=env.GITFolder + '/' + filename.substring(0, filename.indexOf('.zip'));
-					println("Before fileOperation")
-					//fileOperations([fileUnZipOperation(filePath: env.IntegrationPkg, targetLocation: folder)])
-					//fileOperations([fileUnZipOperation(filePath: tempfile, targetLocation: folder)])
+					//println("Before fileOperation")
+					fileOperations([fileUnZipOperation(filePath: tempfile, targetLocation: folder)])
 					cpiDownloadResponse.close();
-					println("After fileOperation")
+					//println("After fileOperation")
 					//remove the zip
 					//fileOperations([fileDeleteOperation(excludes: '', includes: tempfile)])
-					println("After fileDeleteOperation")	
+					//println("After fileDeleteOperation")	
 					dir(folder){
-						println("Now in the git add command place")
+						//println("Now in the git add command place")
 						sh 'git add .'
-						println("After the git add command")
+						//println("After the git add command")
 					}
 					//println("Store integration package in Git")
 					//withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: env.GITCredentials ,usernameVariable: 'GIT_AUTHOR_NAME', passwordVariable: 'GIT_PASSWORD']]) {  

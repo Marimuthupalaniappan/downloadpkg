@@ -81,7 +81,7 @@ pipeline {
 					cpiDownloadResponse.close();
 					println("After fileOperation")
 					//remove the zip
-					fileOperations([fileDeleteOperation(excludes: '', includes: tempfile)])
+					//fileOperations([fileDeleteOperation(excludes: '', includes: tempfile)])
 					println("After fileDeleteOperation")	
 					dir(folder){
 						println("Now in the git add command place")

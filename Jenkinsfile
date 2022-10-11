@@ -74,10 +74,9 @@ pipeline {
 					def disposition = cpiDownloadResponse.headers.toString();
 					def index=disposition.indexOf('filename')+9;
 					def lastindex=disposition.indexOf('.zip', index);
-					def filename=disposition.substring(index + 1, lastindex + 4);
-					def folder=env.GITFolder + '/' + filename.substring(0, filename.indexOf('.zip'));
+					def env.IntegrationPkg=disposition.substring(index + 1, lastindex + 4);
+					def folder=env.GITFolder + '/' + env.IntegrationPkg.substring(0, env.IntegrationPkg.indexOf('.zip'));
 					println("Before fileOperation")
-					env.IntegrationPkg = $filename;
 					//fileOperations([fileZipOperation(filePath: env.IntegrationPkg, targetLocation: folder)])
 					//fileOperations([fileUnZipOperation(filePath: tempfile, targetLocation: folder)])
 					cpiDownloadResponse.close();

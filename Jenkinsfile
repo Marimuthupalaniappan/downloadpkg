@@ -56,7 +56,7 @@ pipeline {
 					}
 					//download and extract package from tenant
 					println("Downloading package");
-					def tempfile = UUID.randomUUID().toString() + ".zip";
+					def IntegrationPkg = UUID.randomUUID().toString() + ".zip";
 					def cpiDownloadResponse = httpRequest httpProxy: 'http://rb-proxy-sl.rbesz01.com:8080',acceptType: 'APPLICATION_ZIP', 
 						customHeaders: [[maskValue: false, name: 'Authorization', value: token]], 
 						ignoreSslErrors: false, 
@@ -74,10 +74,10 @@ pipeline {
 					def disposition = cpiDownloadResponse.headers.toString();
 					def index=disposition.indexOf('filename')+9;
 					def lastindex=disposition.indexOf('.zip', index);
-					def IntegrationPkg=disposition.substring(index + 1, lastindex + 4);
-					def folder=env.GITFolder + '/' + IntegrationPkg.substring(0, IntegrationPkg.indexOf('.zip'));
+					def filename=disposition.substring(index + 1, lastindex + 4);
+					def folder=env.GITFolder + '/' + filename.substring(0, filename.indexOf('.zip'));
 					println("Before fileOperation")
-					//fileOperations([fileZipOperation(filePath: env.IntegrationPkg, targetLocation: folder)])
+					//fileOperations([fileUnZipOperation(filePath: env.IntegrationPkg, targetLocation: folder)])
 					//fileOperations([fileUnZipOperation(filePath: tempfile, targetLocation: folder)])
 					cpiDownloadResponse.close();
 					println("After fileOperation")

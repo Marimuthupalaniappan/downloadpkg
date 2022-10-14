@@ -51,9 +51,9 @@ pipeline {
 						error("Requesting the oauth token for Cloud Integration failed:\n${e}")
 					}
 					//delete the old package content so that only the latest content gets stored
-					dir(env.GITFolder + '/' + env.IntegrationPkg){
-						deleteDir();
-					}
+					//dir(env.GITFolder + '/' + env.IntegrationPkg){
+					//	deleteDir();
+					//}
 					//download and extract package from tenant
 					println("Downloading package");
 					//def tempfile = UUID.randomUUID().toString() + ".zip";

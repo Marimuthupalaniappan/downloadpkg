@@ -3,7 +3,7 @@ pipeline {
 
 	//Configure the following environment variables before executing the Jenkins Job	
 	environment {
-		//IntegrationPkg = "
+		//IntegrationPkg = "muthuPOC"
 		CPIHost = "${env.CPI_HOST}"
 		CPIOAuthHost = "${env.CPI_OAUTH_HOST}"
 		CPIOAuthCredentials = "${env.CPI_OAUTH_CRED}"	
@@ -58,16 +58,13 @@ pipeline {
 					println("Downloading package");
 					//def tempfile = UUID.randomUUID().toString() + ".zip";
 					def tempfile = IntegrationPkg + ".zip";
-					println("here is the random value:" + tempfile);
+					//println("here is the random value:" + tempfile);
 					
-					def body = “RESULT OF YOUR HTTP CALL”
-
+					def body = url: 'https://' + env.CPIHost + '/api/v1/IntegrationPackages
         				def feed = new XmlParser().parseText(body)
        					 //checks  
-        				assert feed.entry instanceof groovy.util.NodeList 
+        				 assert feed.entry instanceof groovy.util.NodeList 
        					 assert feed.title.text() == 'IntegrationPackages' 
-
-       
        					 Iterator it = feed.entry.iterator();
        					// List result = new ArrayList();
         				while (it.hasNext()) {

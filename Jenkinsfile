@@ -61,7 +61,7 @@ pipeline {
 					//println("here is the random value:" + tempfile);
 					//def body = "RESULT OF YOUR HTTP CALL"
 					
-					def cpiDownloadResponse = httpRequest httpProxy: 'http://rb-proxy-sl.rbesz01.com:8080',acceptType: 'APPLICATION_ZIP', 
+					def cpiDownloadResponse1 = httpRequest httpProxy: 'http://rb-proxy-sl.rbesz01.com:8080',acceptType: 'APPLICATION_ZIP', 
 						customHeaders: [[maskValue: false, name: 'Authorization', value: token]], 
 						ignoreSslErrors: false, 
 						responseHandle: 'LEAVE_OPEN', 

@@ -59,7 +59,7 @@ pipeline {
 					//def tempfile = UUID.randomUUID().toString() + ".zip";
 					def tempfile = IntegrationPkg + ".zip";
 					//println("here is the random value:" + tempfile);
-					
+					//def body = "RESULT OF YOUR HTTP CALL"
 					def body = url: 'https://' + env.CPIHost + '/api/v1/IntegrationPackages
         				def feed = new XmlParser().parseText(body)
        					 //checks  

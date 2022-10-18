@@ -38,10 +38,10 @@ pipeline {
 					println("Request token");
 					def token;
 					try{
-						def getTokenResp = httpRequest httpProxy: 'http://rb-proxy-sl.rbesz01.com:8080',acceptType: 'atom/xml', 
+						def getTokenResp = httpRequest httpProxy: 'http://rb-proxy-sl.rbesz01.com:8080',acceptType: 'APPLICATION_JSON', 
 						authentication: env.CPIOAuthCredentials, 
 						//edit
-						contentType: 'atom/xml', 
+						contentType: 'APPLICATION_JSON', 
 						httpMode: 'POST', 
 						responseHandle: 'LEAVE_OPEN', 
 						timeout: 30, 

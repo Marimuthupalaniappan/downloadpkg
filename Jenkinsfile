@@ -57,7 +57,7 @@ pipeline {
 					//download and extract package from tenant
 					println("Downloading package");
 					//def tempfile = UUID.randomUUID().toString() + ".zip";
-					def tempfile = node.'*:properties'.'*:Id'.text() + ".zip";
+					//def tempfile = node.'*:properties'.'*:Id'.text() + ".zip";
 					//println("here is the random value:" + tempfile);
 					
 					
@@ -71,42 +71,18 @@ pipeline {
 					url: 'https://' + env.CPIHost + '/api/v1/IntegrationPackages';
 					println("herer is the information of URL:"+ tempfile1);
 					
-					def body = "RESULT OF YOUR HTTP CALL"
-					//def body = readJSON
-					def feed = new XmlParser().parseText(body)
-       					 //checks  
-        				 assert feed.entry instanceof groovy.util.NodeList 
-       					 assert feed.title.text() == 'IntegrationPackages' 
-       					 Iterator itt = feed.entry.iterator();
-       					// List result = new ArrayList();
-        				while (itt.hasNext()) {
-         				 Node node = (Node) itt.next();
-         				// result.add(node.'*:properties'.'*:Id'.text());
-         				 println(node.'*:properties'.'*:Id'.text());
-       					 //}
-					
-					def cpiDownloadResponse = httpRequest httpProxy: 'http://rb-proxy-sl.rbesz01.com:8080',acceptType: 'APPLICATION_ZIP', 
-						customHeaders: [[maskValue: false, name: 'Authorization', value: token]], 
-						ignoreSslErrors: false, 
-						responseHandle: 'LEAVE_OPEN', 
-						validResponseCodes: '100:399, 404',
-						timeout: 30,  
-						outputFile: tempfile,
-						//url: 'https://' + env.CPIHost + '/api/v1/IntegrationPackages(\''+ env.IntegrationPkg + '\')/$value';
-						url: 'https://' + env.CPIHost + '/api/v1/IntegrationPackages(\''+ node.'*:properties'.'*:Id'.text() + '\')/$value';
-						
-					if (cpiDownloadResponse.status == 404){
+					if (cpiDownloadResponse1.status == 404){
 						//invalid Package ID
 						error("Received http status code 404. Please check if the Package ID that you have provided exists on the tenant.");
 					}
-					def disposition = cpiDownloadResponse.headers.toString();
+					def disposition = cpiDownloadResponse1.headers.toString();
 					def index=disposition.indexOf('filename')+9;
 					def lastindex=disposition.indexOf('.zip', index);
 					def filename=disposition.substring(index + 1, lastindex + 4);
 					def folder=env.GITFolder + '/' + filename.substring(0, filename.indexOf('.zip'));
 					//println("Before fileOperation")
 					fileOperations([fileUnZipOperation(filePath: tempfile, targetLocation: folder)])
-					cpiDownloadResponse.close();
+					cpiDownloadResponse1.close();
 					//println("After fileOperation")
 					//remove the zip
 					//fileOperations([fileDeleteOperation(excludes: '', includes: tempfile)])
@@ -121,7 +97,7 @@ pipeline {
 						//sh 'git diff-index --quiet HEAD || git commit -am ' + '\'' + env.GitComment + '\''
 						//sh('git push --push-option=ci-skip https://${GIT_AUTHOR_NAME}:${GIT_PASSWORD}@' + env.GITRepositoryURL + ' HEAD:' + env.GITBranch)
 					//}
-					}
+					
 				}
 			}
 		}

@@ -56,7 +56,7 @@ pipeline {
 					//}
 					//download and extract package from tenant
 					println("Downloading package");
-					//def tempfile = UUID.randomUUID().toString() + ".zip";
+					def tempfile = UUID.randomUUID().toString() + ".zip";
 					//def tempfile = node.'*:properties'.'*:Id'.text() + ".zip";
 					//println("here is the random value:" + tempfile);
 					
@@ -67,9 +67,9 @@ pipeline {
 						responseHandle: 'LEAVE_OPEN', 
 						validResponseCodes: '100:399, 404',
 						timeout: 30,  
-						outputFile: tempfile1,
+						outputFile: tempfile,
 					url: 'https://' + env.CPIHost + '/api/v1/IntegrationPackages';
-					println("herer is the information of URL:"+ tempfile1);
+					println("herer is the information of URL:"+ tempfile);
 					
 					if (cpiDownloadResponse1.status == 404){
 						//invalid Package ID

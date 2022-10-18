@@ -68,7 +68,7 @@ pipeline {
 					//	validResponseCodes: '100:399, 404',
 					//	timeout: 30,  
 					//	outputFile: tempfile,
-					URL = url: 'https://' + env.CPIHost + '/api/v1/IntegrationPackages';
+					URL = "${url: 'https://' + env.CPIHost + '/api/v1/IntegrationPackages'}"
 					println(URL);
 					
 					def body = "RESULT OF YOUR HTTP CALL"

@@ -40,7 +40,8 @@ pipeline {
 					try{
 						def getTokenResp = httpRequest httpProxy: 'http://rb-proxy-sl.rbesz01.com:8080',acceptType: 'APPLICATION_JSON', 
 						authentication: env.CPIOAuthCredentials, 
-						contentType: 'APPLICATION_JSON', 
+						//edit
+						contentType: 'atom/xml', 
 						httpMode: 'POST', 
 						responseHandle: 'LEAVE_OPEN', 
 						timeout: 30, 
@@ -69,7 +70,7 @@ pipeline {
 						timeout: 30,  
 						outputFile: tempfile,
 					url: 'https://' + env.CPIHost + '/api/v1/IntegrationPackages';
-					println("herer is the information of URL:"+ tempfile);
+					println("here is the information of URL:"+ tempfile);
 					
 					if (cpiDownloadResponse1.status == 404){
 						//invalid Package ID

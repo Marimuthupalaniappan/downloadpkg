@@ -66,7 +66,8 @@ pipeline {
 						customHeaders: [[maskValue: false, name: 'Authorization', value: token, name: 'Content-Type', value: 'atom/xml']], 
 						ignoreSslErrors: false, 
 						responseHandle: 'LEAVE_OPEN', 
-						validResponseCodes: '100:399, 404',
+						//validResponseCodes: '100:399, 404',
+						validResponseCodes: '200:404',
 						timeout: 30,  
 						outputFile: tempfile,
 					url: 'https://' + env.CPIHost + '/api/v1/IntegrationPackages';

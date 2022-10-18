@@ -59,17 +59,20 @@ pipeline {
 					//def tempfile = UUID.randomUUID().toString() + ".zip";
 					def tempfile = node.'*:properties'.'*:Id'.text() + ".zip";
 					//println("here is the random value:" + tempfile);
-					//def body = "RESULT OF YOUR HTTP CALL"
 					
-					def cpiDownloadResponse1 = httpRequest httpProxy: 'http://rb-proxy-sl.rbesz01.com:8080',acceptType: 'APPLICATION_ZIP', 
-						customHeaders: [[maskValue: false, name: 'Authorization', value: token]], 
-						ignoreSslErrors: false, 
-						responseHandle: 'LEAVE_OPEN', 
-						validResponseCodes: '100:399, 404',
-						timeout: 30,  
-						outputFile: tempfile,
-					url: 'https://' + env.CPIHost + '/api/v1/IntegrationPackages';
-					def body = readJSON
+					
+					//def cpiDownloadResponse1 = httpRequest httpProxy: 'http://rb-proxy-sl.rbesz01.com:8080',acceptType: 'APPLICATION_ZIP', 
+					//	customHeaders: [[maskValue: false, name: 'Authorization', value: token]], 
+					//	ignoreSslErrors: false, 
+					//	responseHandle: 'LEAVE_OPEN', 
+					//	validResponseCodes: '100:399, 404',
+					//	timeout: 30,  
+					//	outputFile: tempfile,
+					URL = url: 'https://' + env.CPIHost + '/api/v1/IntegrationPackages';
+					println(URL);
+					
+					def body = "RESULT OF YOUR HTTP CALL"
+					//def body = readJSON
 					def feed = new XmlParser().parseText(body)
        					 //checks  
         				 assert feed.entry instanceof groovy.util.NodeList 

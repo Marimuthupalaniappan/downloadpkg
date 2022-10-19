@@ -3,7 +3,7 @@ pipeline {
 
 	//Configure the following environment variables before executing the Jenkins Job	
 	environment {
-		//IntegrationPkg = "muthuPOC"
+		IntegrationPkg = "muthuPOC"
 		CPIHost = "${env.CPI_HOST}"
 		CPIOAuthHost = "${env.CPI_OAUTH_HOST}"
 		CPIOAuthCredentials = "${env.CPI_OAUTH_CRED}"	
@@ -40,7 +40,6 @@ pipeline {
 					try{
 						def getTokenResp = httpRequest httpProxy: 'http://rb-proxy-sl.rbesz01.com:8080',acceptType: 'APPLICATION_JSON', 
 						authentication: env.CPIOAuthCredentials, 
-						//edit
 						contentType: 'APPLICATION_JSON', 
 						httpMode: 'POST', 
 						responseHandle: 'LEAVE_OPEN', 
@@ -52,39 +51,34 @@ pipeline {
 						error("Requesting the oauth token for Cloud Integration failed:\n${e}")
 					}
 					//delete the old package content so that only the latest content gets stored
-					//dir(env.GITFolder + '/' + env.IntegrationPkg){
-					//	deleteDir();
-					//}
+					dir(env.GITFolder + '/' + env.IntegrationPkg){
+						deleteDir();
+					}
 					//download and extract package from tenant
 					println("Downloading package");
-					def tempfile = UUID.randomUUID().toString() + ".zip";
-					//def tempfile = node.'*:properties'.'*:Id'.text() + ".zip";
-					//println("here is the random value:" + tempfile);
-					
-					
-					def cpiDownloadResponse1 = httpRequest httpProxy: 'http://rb-proxy-sl.rbesz01.com:8080', 
-						customHeaders: [[maskValue: false, name: 'Authorization', value: token, name: 'Content-Type', value: 'atom/xml']], 
+					//def tempfile = UUID.randomUUID().toString() + ".zip";
+					def tempfile = IntegrationPkg + ".zip";
+					println("here is the random value:" + tempfile);
+					def cpiDownloadResponse = httpRequest httpProxy: 'http://rb-proxy-sl.rbesz01.com:8080',acceptType: 'APPLICATION_ZIP', 
+						customHeaders: [[maskValue: false, name: 'Authorization', value: token]], 
 						ignoreSslErrors: false, 
 						responseHandle: 'LEAVE_OPEN', 
-						//validResponseCodes: '100:399, 404',
-						validResponseCodes: '200:404',
+						validResponseCodes: '100:399, 404',
 						timeout: 30,  
 						outputFile: tempfile,
-					url: 'https://' + env.CPIHost + '/api/v1/IntegrationPackages';
-					println("here is the information of URL:"+ tempfile);
-					
-					if (cpiDownloadResponse1.status == 404){
+						url: 'https://' + env.CPIHost + '/api/v1/IntegrationPackages(\''+ env.IntegrationPkg + '\')/$value';
+					if (cpiDownloadResponse.status == 404){
 						//invalid Package ID
 						error("Received http status code 404. Please check if the Package ID that you have provided exists on the tenant.");
 					}
-					//def disposition = cpiDownloadResponse1.headers.toString();
-					//def index=disposition.indexOf('filename')+9;
-					//def lastindex=disposition.indexOf('.zip', index);
-					//def filename=disposition.substring(index + 1, lastindex + 4);
-					//def folder=env.GITFolder + '/' + filename.substring(0, filename.indexOf('.zip'));
+					def disposition = cpiDownloadResponse.headers.toString();
+					def index=disposition.indexOf('filename')+9;
+					def lastindex=disposition.indexOf('.zip', index);
+					def filename=disposition.substring(index + 1, lastindex + 4);
+					def folder=env.GITFolder + '/' + filename.substring(0, filename.indexOf('.zip'));
 					//println("Before fileOperation")
-					//fileOperations([fileUnZipOperation(filePath: tempfile, targetLocation: folder)])
-					cpiDownloadResponse1.close();
+					fileOperations([fileUnZipOperation(filePath: tempfile, targetLocation: folder)])
+					cpiDownloadResponse.close();
 					//println("After fileOperation")
 					//remove the zip
 					//fileOperations([fileDeleteOperation(excludes: '', includes: tempfile)])
@@ -98,8 +92,7 @@ pipeline {
 					//withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: env.GITCredentials ,usernameVariable: 'GIT_AUTHOR_NAME', passwordVariable: 'GIT_PASSWORD']]) {  
 						//sh 'git diff-index --quiet HEAD || git commit -am ' + '\'' + env.GitComment + '\''
 						//sh('git push --push-option=ci-skip https://${GIT_AUTHOR_NAME}:${GIT_PASSWORD}@' + env.GITRepositoryURL + ' HEAD:' + env.GITBranch)
-					//}
-					
+					//}				
 				}
 			}
 		}
